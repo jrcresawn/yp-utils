@@ -75,7 +75,7 @@ function addToGroup() {
 
 echo echo "/var/yp/src/passwd: $user:x:$uid:$gid:$name:/home/$user:/bin/bash" > /var/yp/src/passwd
 echo echo "/var/yp/src/shadow: $user:*:::::::" > /var/yp/src/shadow
-echo add $user to group $gid in /var/yp/src/group
+echo add $user to group $gid in /var/yp/src/group using addToGroup()
 echo '(cd /var/yp; make)'
 passwd=`pwgen -s 8 1`
 echo "passwd = $passwd"
