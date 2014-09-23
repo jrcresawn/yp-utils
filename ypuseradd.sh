@@ -63,7 +63,7 @@ done
 
 function addToGroup() {
   [ -z "$1" ] && return 1
-  
+
   if getent group $1 2>&1 >/dev/null; then
     # modify group entry with sed
     return 0
@@ -73,8 +73,8 @@ function addToGroup() {
   fi
 }
 
-echo append to /var/yp/src/passwd: $user:x:$uid:$gid:$name:/home/$user:/bin/bash
-echo append to /var/yp/src/shadow: $user:*:::::::
+echo echo "/var/yp/src/passwd: $user:x:$uid:$gid:$name:/home/$user:/bin/bash" > /var/yp/src/passwd
+echo echo "/var/yp/src/shadow: $user:*:::::::" > /var/yp/src/shadow
 echo add $user to group $gid in /var/yp/src/group
 echo '(cd /var/yp; make)'
 passwd=`pwgen -s 8 1`
