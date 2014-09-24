@@ -61,17 +61,23 @@ while [ $found -eq 1 ] ; do
   found=$?
 done
 
-function addToGroup() {
-  [ -z "$1" ] && return 1
+# function addToGroup() {
+#   [ -z "$1" ] && return 1
 
-  if getent group $1 2>&1 >/dev/null; then
-    # modify group entry with sed
-    return 0
-  else
-    # append to group
-    return 0
-  fi
-}
+#   if getent group $1 2>&1 >/dev/null; then
+#     # modify group entry with sed
+#     if getent group $gid 2>&1 >/dev/null; then
+#       # group exists; insert with sed
+#       sed -e 's/^[a-zA-Z0-9]:'
+#     else
+#       # group does not exist; append to file with echo
+      
+#     return 0
+#   else
+#     # append to group
+#     return 0
+#   fi
+# }
 
 echo echo "/var/yp/src/passwd: $user:x:$uid:$gid:$name:/home/$user:/bin/bash" > /var/yp/src/passwd
 echo echo "/var/yp/src/shadow: $user:*:::::::" > /var/yp/src/shadow
