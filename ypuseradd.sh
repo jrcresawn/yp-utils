@@ -39,7 +39,7 @@ if [ "$gid" -lt "1000" ]; then
   exit 1
 fi
 
-# return 1 if the Uid is already used, else 0
+# return 1 if the uid is used, else return 0
 function usedUid() {
   [ -z "$1" ] && return
 
@@ -79,13 +79,16 @@ done
 #   fi
 # }
 
-echo echo "/var/yp/src/passwd: $user:x:$uid:$gid:$name:/home/$user:/bin/bash" > /var/yp/src/passwd
-echo echo "/var/yp/src/shadow: $user:*:::::::" > /var/yp/src/shadow
-echo add $user to group $gid in /var/yp/src/group using addToGroup()
-echo '(cd /var/yp; make)'
+# echo echo "/var/yp/src/passwd: $user:x:$uid:$gid:$name:/home/$user:/bin/bash" > /var/yp/src/passwd
+# echo echo "/var/yp/src/shadow: $user:*:::::::" > /var/yp/src/shadow
 passwd=`pwgen -s 8 1`
+crypt=`mkpasswd --method=sha-512 $passwd`
+echo "/var/yp/src/passwd: $user:x:$uid:$gid:$name:/home/$user:/bin/bash"
+echo "/var/yp/src/shadow: $user:$crypt:::::::"
+echo "add $user to group $gid in /var/yp/src/group using addToGroup()"
+echo '(cd /var/yp; make)'
 echo "passwd = $passwd"
-echo "yppasswd $user"
+#echo "yppasswd $user"
 echo "mkdir /home/$user"
 echo "cp /etc/skel/.??* /home/$user"
 echo "chown -R $uid:$gid /home/$user"
