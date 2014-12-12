@@ -71,7 +71,7 @@ done
 #       sed -e 's/^[a-zA-Z0-9]:'
 #     else
 #       # group does not exist; append to file with echo
-      
+
 #     return 0
 #   else
 #     # append to group
@@ -79,16 +79,20 @@ done
 #   fi
 # }
 
-# echo echo "/var/yp/src/passwd: $user:x:$uid:$gid:$name:/home/$user:/bin/bash" > /var/yp/src/passwd
-# echo echo "/var/yp/src/shadow: $user:*:::::::" > /var/yp/src/shadow
+if [ -d "/home/$user" ]; then
+  echo "$0: directory exists -- /home/$user"
+  exit 1
+else
+  mkdir /home/$user
+fi
+
+cp /etc/skel/.??* /home/$user
+chown -R $uid:$gid /home/$user
 passwd=`pwgen -s 8 1`
 crypt=`mkpasswd --method=sha-512 $passwd`
-echo "/var/yp/src/passwd: $user:x:$uid:$gid:$name:/home/$user:/bin/bash"
-echo "/var/yp/src/shadow: $user:$crypt:::::::"
-echo "add $user to group $gid in /var/yp/src/group using addToGroup()"
-echo '(cd /var/yp; make)'
-echo "passwd = $passwd"
-#echo "yppasswd $user"
-echo "mkdir /home/$user"
-echo "cp /etc/skel/.??* /home/$user"
-echo "chown -R $uid:$gid /home/$user"
+echo "$user:x:$uid:$gid:$name:/home/$user:/bin/bash" >> /var/yp/src/passwd
+echo "$user:$crypt:::::::" >> /var/yp/src/shadow
+(cd /var/yp; make)
+echo "add $user to group $gid in /var/yp/src/group if required"
+echo "credentials = $user / $passwd"
+
